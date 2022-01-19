@@ -1,0 +1,41 @@
+version: '3.7'
+
+services:
+  db:
+    container_name: "moudle_db"
+    build: 
+      context: .
+      dockerfile: db.Dockerfile
+    networks:
+      - default
+    restart: always
+    ports:
+      - "3307:3306"
+    expose: 
+      # Opens port 3306 on the container
+      - "3306"
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: "password"
+      MYSQL_DATABASE: "Modules"
+      MYSQL_USER: "test"
+      MYSQL_PASSWORD: "password"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password
+  api:
+    container_name: "moudle_api"
+    build: 
+      context: .
+      dockerfile: api.Dockerfile
+    networks:
+      - default
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    volumes:
+      - .:/app/
+networks:
+  default:
+volumes:
+  mysql_data:      
