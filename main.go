@@ -64,5 +64,5 @@ func modpage(w http.ResponseWriter, r *http.Request) {
 func main() {
 	http.HandleFunc("/", home)
 	http.HandleFunc("/mod", modpage)
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe(":8171", nil))
 }
