@@ -1,0 +1,104 @@
+<html lang="en">
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module</title>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-10">
+            <form class="form-inline" onsubmit="search(this)">
+                <div class="form-group pr-3 pt-5 ">
+                  <input type="text" class="form-control" id="courseCode" name="courseCode" aria-describedby="emailHelp" placeholder="Enter Course Code">
+                </div>
+                <button type="submit" id="searchBtn" class="btn btn-primary mt-5">Search</button>
+              </form>
+        </div>
+        <div class="col-sm">
+            <button class="btn btn-primary mt-5" onclick="window.location.href='http://localhost:8170/api/v1/Module';">View All</button>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <table class="table table-bordered" name="resultTable", id="resultTable">
+        <thead class="thead-dark">
+            <tr class="bg-info">
+                <th>Module Code</th>
+                <th>Module Name</th>
+                <th>Synopsis</th>
+                <th>Learning objectives</th>
+                <th>Classes</th>
+                <th>Assigned tutors</th>
+                <th>Enrolled students</th>
+                <th>Ratings and comments</th>
+            </tr>
+        </thead>
+        <tbody id="myTable"></tbody>
+    </table>
+</div>
+</body>
+</html>
+<script>
+    var modArry=[];
+    var searchArry = [];
+    
+    function search(form){
+        event.preventDefault();
+        const dataForm = new FormData(form);
+        var url, courseCode;
+        for (let [key, value] of dataForm){
+            if (key == "courseCode"){
+                courseCode = value
+            }
+        }
+        console.log(courseCode);
+        url = "http://localhost:8171/api/v1/Module/" + courseCode
+        console.log(url)
+        $("#resultTable tbody tr").remove();
+        $.ajax({
+            type: 'GET',
+            url: url,
+            contentType: 'application/json',
+            success:function(response){
+                searchArry = response
+                buildTable(JSON.parse(searchArry))
+                console.log(searchArry)
+            }
+        });
+        
+    };
+
+    //populate home page during start up
+    $(document).ready(function(){
+        $.ajax({
+        method: 'GET',
+        url: 'http://localhost:8171/api/v1/Module',
+        success:function(response){
+            modArry = response
+            buildTable(JSON.parse(modArry))
+            console.log(JSON.parse(modArry))
+            }
+        });
+    });
+    function buildTable(data){
+        var table = document.getElementById('myTable')
+        for (var i = 0; i < data.length; i++) {
+            var row = `<tr>
+							<td>${data[i].mod_id}</td>
+							<td>${data[i].mod_name}</td>
+							<td>${data[i].mod_syno}</td>
+							<td>${data[i].mod_lo}</td>
+							<td>${data[i].mod_class}</td>
+							<td>${data[i].tutor}</td>
+							<td>${data[i].student}</td>
+							<td>${data[i].mod_rnc}</td>
+					  </tr>`
+                      table.innerHTML += row
+            
+        }
+    }
+</script>
