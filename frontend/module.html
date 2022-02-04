@@ -11,6 +11,7 @@
 <div class="container">
     <div class="row">
         <div class="col-10">
+            <!--search from-->
             <form class="form-inline" onsubmit="search(this)">
                 <div class="form-group pr-3 pt-5 ">
                   <input type="text" class="form-control" id="courseCode" name="courseCode" aria-describedby="emailHelp" placeholder="Enter Course Code">
@@ -19,11 +20,13 @@
               </form>
         </div>
         <div class="col-sm">
+            <!-- return back to home page -->
             <button class="btn btn-primary mt-5" onclick="window.location.href='http://localhost:8170/api/v1/Module';">View All</button>
         </div>
     </div>
 </div>
 <div class="container">
+    <!--Table heading -->
     <table class="table table-bordered" name="resultTable", id="resultTable">
         <thead class="thead-dark">
             <tr class="bg-info">
@@ -37,34 +40,45 @@
                 <th>Ratings and comments</th>
             </tr>
         </thead>
+        <!--Empty table body to contain ajax response-->
         <tbody id="myTable"></tbody>
     </table>
 </div>
 </body>
 </html>
 <script>
+    // main body array
     var modArry=[];
+    // search result array
     var searchArry = [];
     
+    //search function
     function search(form){
         event.preventDefault();
+        // get data from search form
         const dataForm = new FormData(form);
         var url, courseCode;
+        // check key value pair in the form to get course code
         for (let [key, value] of dataForm){
             if (key == "courseCode"){
                 courseCode = value
             }
         }
         console.log(courseCode);
+        // API handler for search
         url = "http://localhost:8171/api/v1/Module/" + courseCode
         console.log(url)
+        // clear existing table content
         $("#resultTable tbody tr").remove();
+
         $.ajax({
             type: 'GET',
             url: url,
             contentType: 'application/json',
             success:function(response){
+                // parse resonse to searcharry
                 searchArry = response
+                // build table 
                 buildTable(JSON.parse(searchArry))
                 console.log(searchArry)
             }
@@ -76,6 +90,7 @@
     $(document).ready(function(){
         $.ajax({
         method: 'GET',
+        // api handler for get all module
         url: 'http://localhost:8171/api/v1/Module',
         success:function(response){
             modArry = response
@@ -84,8 +99,11 @@
             }
         });
     });
+
     function buildTable(data){
+        // target element with ID
         var table = document.getElementById('myTable')
+        // loop throught all the JSON data from the response
         for (var i = 0; i < data.length; i++) {
             var row = `<tr>
 							<td>${data[i].mod_id}</td>
@@ -97,8 +115,8 @@
 							<td>${data[i].student}</td>
 							<td>${data[i].mod_rnc}</td>
 					  </tr>`
+                      // move to next row
                       table.innerHTML += row
-            
         }
     }
 </script>

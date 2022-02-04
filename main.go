@@ -209,7 +209,7 @@ func searchModAPI(modCode string) []Module {
 		temp.Mod_ID = i.ModuleCode
 		temp.Mod_Name = i.ModuleName
 		temp.Mod_Syno = i.Synopsis
-		temp.Mod_RnC = "Moudle is fun" // ask 3.9 idiot...
+		temp.Mod_RnC = "Moudle is fun"
 		for _, c := range class {
 			if temp.Mod_ID == c.moduleCode {
 				temp.Mod_Class = append(temp.Mod_Class, c.classCode...)
@@ -394,7 +394,7 @@ func main() {
 
 	r := mux.NewRouter()
 	headers := handlers.AllowedHeaders([]string{"X-REQUESTED-With", "Content-Type"})
-	methods := handlers.AllowedMethods([]string{"GET", "PUT", "POST"})
+	methods := handlers.AllowedMethods([]string{"GET"})
 	origins := handlers.AllowedOrigins([]string{"*"})
 	r.HandleFunc("/api/v1/Module", showAllMod).Methods("GET")
 	r.HandleFunc("/api/v1/Module/{id}", searchMod).Methods("GET")
