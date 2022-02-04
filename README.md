@@ -9,7 +9,8 @@ Docker image link:
 
 ---
 
-![Untitled](ETI%20Assignment%202%206b82662f8025430b850375ef226df232/Untitled.png)
+![Untitled](https://user-images.githubusercontent.com/48742733/152543324-a5391c0b-0953-4ff5-aa5f-d081f59deee8.png)
+
 
 # Architecture design consideration
 
@@ -149,7 +150,7 @@ in the even that the other API and database are not working due to unforeseeable
 
    
 
-```json
+```GO
 func showAllMod(w http.ResponseWriter, r *http.Request) {
 	//Retrive data from Database
 	//mod := getAllMod()
