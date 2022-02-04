@@ -1,3 +1,4 @@
+-- invoke table
 CREATE TABLE `module`
 (
     moduleCode varchar(255),
@@ -29,7 +30,7 @@ CREATE TABLE `class`
     primary key (classCode)
 );
 
-
+-- Insert vaule into table
 INSERT INTO `module` (`moduleCode`,`moudleName`,`moduleSynopsis`,`moduleLO`,`moudleRnC`)
 VALUE ('ETI01','ETI','learn about ERI', 'prepare for new trent', 'NA');
 INSERT INTO `module` (`moduleCode`,`moudleName`,`moduleSynopsis`,`moduleLO`,`moudleRnC`)

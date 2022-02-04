@@ -23,7 +23,7 @@ type Module struct {
 	Mod_RnC   string   `json:"mod_rnc"`
 }
 
-//API Json response from Module management microservices
+//API JSON response from Module management microservices to display all module
 type ModAPI struct {
 	Data struct {
 		Modules []struct {
@@ -35,6 +35,7 @@ type ModAPI struct {
 	} `json:"data"`
 }
 
+//API JSON response diffrent in object name compared to display all module
 type SearchModAPI struct {
 	Data struct {
 		SearchModules []struct {
@@ -86,8 +87,10 @@ func connect() *sql.DB {
 //Get all module from the database and map to Module struct
 func getAllMod() []Module {
 
+	//parse sql.DB to db
 	db := connect()
 	//execute query
+	//get all module from module table
 	results, err := db.Query("SELECT * FROM module")
 	if err != nil {
 		panic(err)
@@ -95,15 +98,19 @@ func getAllMod() []Module {
 
 	var moudles []Module
 	for results.Next() {
+		//temp obj
 		var m Module
+		//parse individual result to modules object
 		err = results.Scan(&m.Mod_ID, &m.Mod_Name, &m.Mod_Syno, &m.Mod_LO, &m.Mod_RnC)
 		if err != nil {
 			panic(err)
 		}
 
+		//functions to assemble temp obj base on moduld ID
 		m.Tutor = append(m.Tutor, getTutor(m.Mod_ID)...)
 		m.Student = append(m.Student, getStudent(m.Mod_ID)...)
 		m.Mod_Class = append(m.Mod_Class, getClass(m.Mod_ID)...)
+		//append final assembled temp module obj into obj arry
 		moudles = append(moudles, m)
 	}
 
@@ -149,22 +156,31 @@ func getModAPI() []Module {
 			]
 		}
 	}`
+	//map response into modAPI struct
 	json.Unmarshal([]byte(data), &mod)
+	//get all class information: class code, enrolled student ID, assigned tutor ID
 	class := getClassAPI()
+	// loop through modules arry
 	for _, i := range mod.Data.Modules {
+		//construct temp module obj
 		temp.Mod_ID = i.ModuleCode
 		temp.Mod_Name = i.ModuleName
 		temp.Mod_Syno = i.Synopsis
 		temp.Mod_LO = i.LearningObj
-		temp.Mod_RnC = "Moudle is fun" // ask 3.9 idiot...
+		temp.Mod_RnC = "Moudle is fun"
+		// check for data belong to the specified class
 		for _, c := range class {
+			//check assigned class based on module ID
 			if temp.Mod_ID == c.moduleCode {
+				//append data once found
 				temp.Mod_Class = append(temp.Mod_Class, c.classCode...)
 				temp.Student = append(temp.Student, c.student...)
 				temp.Tutor = append(temp.Tutor, c.tutor...)
 			}
 		}
+		//append consturcted temp module into final arry
 		module = append(module, temp)
+		//clear temp module
 		temp = Module{}
 	}
 	return module
@@ -203,21 +219,30 @@ func searchModAPI(modCode string) []Module {
 			]
 		}
 	}`
+	//map response into modAPI struct
 	json.Unmarshal([]byte(data), &mod)
+	//get all class information: class code, enrolled student ID, assigned tutor ID
 	class := getClassAPI()
+	// loop through searchMdoules arry
 	for _, i := range mod.Data.SearchModules {
+		//construct temp module obj
 		temp.Mod_ID = i.ModuleCode
 		temp.Mod_Name = i.ModuleName
 		temp.Mod_Syno = i.Synopsis
 		temp.Mod_RnC = "Moudle is fun"
+		// check for data belong to the specified class
 		for _, c := range class {
+			//check assigned class based on module ID
 			if temp.Mod_ID == c.moduleCode {
+				//append data once found
 				temp.Mod_Class = append(temp.Mod_Class, c.classCode...)
 				temp.Student = append(temp.Student, c.student...)
 				temp.Tutor = append(temp.Tutor, c.tutor...)
 			}
 		}
+		//append consturcted temp module into final arry
 		module = append(module, temp)
+		//clear temp module
 		temp = Module{}
 	}
 	return module
@@ -253,7 +278,10 @@ func getMod(id string) []Module {
 
 //Get tutors ID assigned base the module code arguement parse in
 func getTutor(id string) []string {
+	//connect to database
 	db := connect()
+	//execute query
+	//get only tutor ID form table
 	results, err := db.Query("select tID from tutor where tMoulde = ?", id)
 	if err != nil {
 		panic(err)
@@ -261,11 +289,14 @@ func getTutor(id string) []string {
 
 	var tutor []string
 	for results.Next() {
+		// temp string
 		var t string
+		//fetch data form database response arry
 		err = results.Scan(&t)
 		if err != nil {
 			panic(err)
 		}
+		//append temp string to final array
 		tutor = append(tutor, t)
 	}
 
@@ -275,7 +306,9 @@ func getTutor(id string) []string {
 
 //Get students ID assigned base on the module code arguement parse in
 func getStudent(id string) []string {
+	//connect to database
 	db := connect()
+	//get only student ID from database base on module ID
 	results, err := db.Query("SELECT stuID FROM student WHERE sModuel = ?", id)
 	if err != nil {
 		panic(err)
@@ -283,11 +316,14 @@ func getStudent(id string) []string {
 
 	var student []string
 	for results.Next() {
+		//temp string
 		var s string
+		//fetch result
 		err = results.Scan(&s)
 		if err != nil {
 			panic(err)
 		}
+		//append string to array
 		student = append(student, s)
 	}
 	defer db.Close()
@@ -296,8 +332,9 @@ func getStudent(id string) []string {
 
 //Get class code assigned base on the module code argument parse in
 func getClass(id string) []string {
+	//connect to database
 	db := connect()
-
+	//get student from database base on moudle code
 	results, err := db.Query("SELECT classCode FROM class WHERE mouduleCode = ?", id)
 	if err != nil {
 		panic(err)
@@ -305,11 +342,14 @@ func getClass(id string) []string {
 
 	var class []string
 	for results.Next() {
+		//temp string
 		var c string
+		//fetch result
 		err = results.Scan(&c)
 		if err != nil {
 			panic(err)
 		}
+		//append temp string
 		class = append(class, c)
 	}
 	defer db.Close()
@@ -325,6 +365,7 @@ func getClassAPI() []modClass {
 	*/
 	var result []modClass
 	var class classAPI
+	//custom object to hold data for every class available
 	var temp modClass
 
 	// startDate :=  "16-01-2022"
@@ -355,15 +396,19 @@ func getClassAPI() []modClass {
 			"ModuleCode":"CM",
 			"ModuleName":"Computing Math"}],
 			"SemesterStartDate":"16-01-2022"}`
+	//map data to classAPI struct
 	json.Unmarshal([]byte(data), &class)
-
+	//loop through modules available
 	for _, i := range class.SemesterModules {
+		//get moodule code
 		temp.moduleCode = i.ModuleCode
 		for _, x := range i.ModuleClasses {
+			//construct modClass obj
 			temp.classCode = append(temp.classCode, x.ClassCode)
 			temp.student = append(temp.student, x.Students...)
 			temp.tutor = append(temp.tutor, x.Tutor)
 		}
+		//add temp obj to final array
 		result = append(result, temp)
 	}
 
@@ -371,6 +416,7 @@ func getClassAPI() []modClass {
 }
 
 func showAllMod(w http.ResponseWriter, r *http.Request) {
+
 	//Retrive data from Database
 	//mod := getAllMod()
 
@@ -394,6 +440,7 @@ func main() {
 
 	r := mux.NewRouter()
 	headers := handlers.AllowedHeaders([]string{"X-REQUESTED-With", "Content-Type"})
+	//only GET call is required
 	methods := handlers.AllowedMethods([]string{"GET"})
 	origins := handlers.AllowedOrigins([]string{"*"})
 	r.HandleFunc("/api/v1/Module", showAllMod).Methods("GET")
