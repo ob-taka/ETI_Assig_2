@@ -4,6 +4,17 @@ Docker image link:
 
 > [https://hub.docker.com/repository/docker/panzeo/eti_assig_2](https://hub.docker.com/repository/docker/panzeo/eti_assig_2)
 > 
+Set up:
+```
+docker run panzeo/eti_assig_2
+```
+OR
+```
+git clone https://github.com/ob-taka/ETI_Assig_2
+```
+```
+docker-compose up -d
+```
 
 # API architecture diagram
 
