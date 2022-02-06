@@ -18,14 +18,13 @@ docker-compose up -d
 
 # API architecture diagram
 
----
 
 ![Untitled](https://user-images.githubusercontent.com/48742733/152543324-a5391c0b-0953-4ff5-aa5f-d081f59deee8.png)
 
 
 # Architecture design consideration
 
----
+
 
 ## Microservice design
 
@@ -42,7 +41,7 @@ Since the view module API only responsible for displaying information, only ***G
 
 Even though the API depends on the other API to function, it is still fully independent from the other API and server at [localhost](http://localhost) endpoint with a port number of ***8171*** while the frontend Nginx server serve at port 8170 on their onw docker container.
 
----
+
 
 ## Nginx
 
@@ -76,11 +75,11 @@ server {
 
 In the code snip we’ve change the default port the service is listening to to port **8170** as specified by the requirement, we also set the index page to point to `module.htm` so that on start up it knows which page to load, so that there won’t be any confusion if other microservice uses index as they html file name. lastly http request form other service to the page is also allowed in case there is a need from the other microservices. 
 
----
+
 
 # Mock data
 
----
+
 
 Since this is a class wide project, there is bound to have a certain level of incompatibility between the microservices, which is why some of the data are being hardcoded as place holder to simulate a success response from the APIs in the case the dependent microservices run into problems.
 
@@ -151,11 +150,11 @@ Sample JSON:
 
 Based on the designer’s requirement, a JSON body is require when making a HTTP request, this again has to be implemented on a separate microservice  however, as of this update only `name` and `sysnopsis` field is available, hence a sample JSON is used to simulate a complete response from the API
 
----
+
 
 # Backup Database
 
----
+
 
 in the even that the other API and database are not working due to unforeseeable reason, or the sole purpose is to demo the microservice working independently with direct access to the database,  update the code in the `main.go` file found between line 373 to 391
 
