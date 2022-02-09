@@ -125,7 +125,7 @@ func getModAPI() []Module {
 	var mod ModAPI
 
 	// //as of 31 Jan Module API only provide module name and synopsis
-	// url := "http://localhost:8114/query"
+	// url := "http://10.30.11.11:8114/query"
 	// // required JSON body as per design of the API
 	// jsonBody := map[string]string{"query": "query ListModules(){modules(){name, synopsis}}"}
 	// jsonValue, _ := json.Marshal(jsonBody)
@@ -193,7 +193,7 @@ func searchModAPI(modCode string) []Module {
 	var mod SearchModAPI
 
 	// //as of 31 Jan Module API only provide module name and synopsis
-	// url := "http://localhost:8114/query"
+	// url := "http://10.30.11.11:8114/query"
 	// // required JSON body as per design of the API
 	// jsonBody := map[string]string{"query": "query SearchModules($text: String!){searchModules(text: $text){name, synopsis}}, "variables":{"text": modCode}"}
 	// jsonValue, _ := json.Marshal(jsonBody)
@@ -369,7 +369,7 @@ func getClassAPI() []modClass {
 	var temp modClass
 
 	// startDate :=  "16-01-2022"
-	// url := "localhost:8041/api/v1/classes/" + startDate
+	// url := "10.30.11.11:8041/api/v1/classes/" + startDate
 	// response, err := http.Get(url)
 	// if err != nil {
 	// 	fmt.Println("request failed")
