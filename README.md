@@ -92,7 +92,7 @@ Since this is a class wide project, there is bound to have a certain level of in
 
 ```bash
 startDate :=  "16-01-2022"
-url := "localhost:8041/api/v1/classes/" + startDate
+url := "10.31.11.11:8041/api/v1/classes/" + startDate
 ```
 
 Sample JSON:
@@ -122,7 +122,7 @@ the Class API from class management microservice requires a `semester_start_date
 **Module Management:**
 
 ```go
-url := "http://localhost:8114/query"
+url := "http://10.31.11.11:8114/query"
 jsonBody := map[string]string{"query": "query SearchModules($text: String!){searchModules(text: $text){name, synopsis}}, "variables":{"text": modCode}"}
 jsonValue, _ := json.Marshal(jsonBody)
 request, _ := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(jsonValue))
